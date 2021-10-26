@@ -8,14 +8,14 @@ import {
     Interaction,
 } from 'discord.js';
 import Bot from '../client/Bot';
-import { Command } from '../interfaces/Command';
+import { Command, CommandBuilderType } from '../interfaces/Command';
 import { EventHandler } from '../interfaces/Event';
 import { hasPermissions } from '../utils/PermissionUtils';
 
 async function canRunCommand(
     client: Bot,
     interaction: CommandInteraction,
-    command: Command<SlashCommandBuilder | ContextMenuCommandBuilder>
+    command: Command<CommandBuilderType>
 ): Promise<boolean> {
     if (command.guildOnly && !interaction.guild) {
         interaction.reply({
@@ -47,7 +47,7 @@ async function canRunCommand(
 }
 
 function handleCommandCall(
-    command: Command<SlashCommandBuilder | ContextMenuCommandBuilder>,
+    command: Command<CommandBuilderType>,
     client: Bot,
     interaction: CommandInteraction | ContextMenuInteraction
 ): void {
