@@ -36,4 +36,5 @@ export const handler: ContextMenuHandler = async (
 export const builder = new ContextMenuCommandBuilder()
     .setName('Delete User Message')
     .setType(ApplicationCommandType.Message);
-export const guildOnly: ((interaction: ContextMenuInteraction) => boolean) = () => true;
+export const guildOnly: (interaction: ContextMenuInteraction) => boolean = () =>
+    true;
