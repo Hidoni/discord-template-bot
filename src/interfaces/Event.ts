@@ -5,7 +5,7 @@ export interface EventHandler {
 }
 
 export interface Event {
-    name: string
+    name: string;
     once: boolean;
     handler: EventHandler;
 }

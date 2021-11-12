@@ -1,5 +1,5 @@
-import { CommandInteraction, MessageComponentInteraction } from "discord.js";
-import Bot from "../client/Bot";
+import { MessageComponentInteraction } from 'discord.js';
+import Bot from '../client/Bot';
 
 export interface ComponentHandlerFunction {
     (client: Bot, interaction: MessageComponentInteraction): Promise<void>;

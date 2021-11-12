@@ -8,7 +8,11 @@ import {
     Interaction,
 } from 'discord.js';
 import Bot from '../client/Bot';
-import { Command, CommandBuilderType, CommandInteractionType } from '../interfaces/Command';
+import {
+    Command,
+    CommandBuilderType,
+    CommandInteractionType,
+} from '../interfaces/Command';
 import { EventHandler } from '../interfaces/Event';
 import { hasPermissions } from '../utils/PermissionUtils';
 
@@ -17,7 +21,11 @@ async function canRunCommand(
     interaction: CommandInteractionType<CommandBuilderType>,
     command: Command<CommandBuilderType>
 ): Promise<boolean> {
-    if (command.guildOnly && command.guildOnly(interaction) && !interaction.guild) {
+    if (
+        command.guildOnly &&
+        command.guildOnly(interaction) &&
+        !interaction.guild
+    ) {
         interaction.reply({
             content: 'This command can only be used in a server.',
             ephemeral: true,

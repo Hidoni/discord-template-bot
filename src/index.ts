@@ -6,10 +6,7 @@ import path from 'path';
 log4js.configure('./config/log4js.json');
 const logger = log4js.getLogger('bot');
 
-const REQUIRED_ENV_VARS: string[] = [
-    'BOT_TOKEN',
-    'BOT_APPLICATION_ID',
-];
+const REQUIRED_ENV_VARS: string[] = ['BOT_TOKEN', 'BOT_APPLICATION_ID'];
 for (const envVar of REQUIRED_ENV_VARS) {
     if (!process.env[envVar]) {
         logger.error(`Missing required environment variable: ${envVar}`);
