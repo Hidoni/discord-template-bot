@@ -8,22 +8,23 @@ import {
     Interaction,
 } from 'discord.js';
 import Bot from '../client/Bot';
-import { Command, CommandBuilderType } from '../interfaces/Command';
+import { Command, CommandBuilderType, CommandInteractionType } from '../interfaces/Command';
 import { EventHandler } from '../interfaces/Event';
 import { hasPermissions } from '../utils/PermissionUtils';
 
 async function canRunCommand(
     client: Bot,
-    interaction: CommandInteraction,
+    interaction: CommandInteractionType<CommandBuilderType>,
     command: Command<CommandBuilderType>
 ): Promise<boolean> {
-    if (command.guildOnly && !interaction.guild) {
+    if (command.guildOnly && command.guildOnly(interaction) && !interaction.guild) {
         interaction.reply({
             content: 'This command can only be used in a server.',
             ephemeral: true,
         });
         return false;
-    } else if (command.permissions) {
+    } else if (command.permissions && command.permissions(interaction)) {
+        const permissions = command.permissions(interaction);
         if (!interaction.member) {
             interaction.reply({
                 content: 'An error has occured during handling of the command',
@@ -33,9 +34,9 @@ async function canRunCommand(
                 `member field was null, could not perform required permission check in command ${interaction.commandName}`
             );
             return false;
-        } else if (!hasPermissions(interaction.member, command.permissions)) {
+        } else if (!hasPermissions(interaction.member, permissions)) {
             interaction.reply({
-                content: `You must have the following permissions to use this command: ${command.permissions.join(
+                content: `You must have the following permissions to use this command: ${permissions.join(
                     ', '
                 )}`,
                 ephemeral: true,
