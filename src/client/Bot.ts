@@ -153,6 +153,27 @@ export default class Bot extends Client {
         }
     }
 
+    private async registerCommandPermissions() {
+        let promises: Promise<unknown>[] = [];
+        for (const command of this.commands.values()) {
+            if (command.id && command.idBasedPermissions) {
+                let route = this.config.debugGuildId
+                    ? Routes.applicationGuildCommand(
+                          this.config.appId,
+                          this.config.debugGuildId,
+                          command.id
+                      )
+                    : Routes.applicationCommand(this.config.appId, command.id);
+                promises.push(
+                    this.restAPI.put(route, {
+                        body: { permissions: command.idBasedPermissions },
+                    })
+                );
+            }
+        }
+        await Promise.all(promises);
+    }
+
     private async registerCommands(): Promise<void> {
         let route = this.config.debugGuildId
             ? Routes.applicationGuildCommands(
@@ -168,6 +189,7 @@ export default class Bot extends Client {
                 body: commandsJSON,
             })) as { id: string; name: string; type: number }[];
             this.assignCommandIds(response);
+            this.registerCommandPermissions();
             this.logger?.info(
                 `Succesfully registered ${commandsJSON.length} commands`
             );
