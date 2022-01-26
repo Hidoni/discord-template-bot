@@ -25,17 +25,6 @@ export interface ContextMenuHandler {
     (client: Bot, interaction: ContextMenuInteraction): Promise<void>;
 }
 
-export enum CommandPermissionTypes {
-    ROLE = 1,
-    USER = 2,
-}
-
-export interface CommandPermission {
-    type: CommandPermissionTypes;
-    id: Snowflake;
-    permission: boolean;
-}
-
 export interface Command<Builder extends CommandBuilderType> {
     handler: Builder extends SlashCommandBuilder
         ? CommandHandler
@@ -48,5 +37,4 @@ export interface Command<Builder extends CommandBuilderType> {
         | ((interaction: CommandInteractionType<Builder>) => PermissionString[])
         | undefined;
     id: Snowflake | undefined;
-    idBasedPermissions: CommandPermission[] | undefined;
 }
