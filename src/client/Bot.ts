@@ -132,6 +132,27 @@ export default class Bot extends Client {
         );
     }
 
+    private assignCommandIds(
+        response: { id: string; name: string; type: number }[]
+    ) {
+        for (const commandData of response) {
+            let command = this.commands.find((command) => {
+                const json = command.builder.toJSON();
+                return (
+                    json.name === commandData.name &&
+                    json.type === commandData.type
+                );
+            });
+            if (command) {
+                command.id = commandData.id;
+            } else {
+                this.logger?.warn(
+                    `Could not find match for command named '${commandData.name}' (type: ${commandData.type})`
+                );
+            }
+        }
+    }
+
     private async registerCommands(): Promise<void> {
         let route = this.config.debugGuildId
             ? Routes.applicationGuildCommands(
@@ -143,7 +164,10 @@ export default class Bot extends Client {
             const commandsJSON = this.commands.map((command) =>
                 command.builder.toJSON()
             );
-            await this.restAPI.put(route, { body: commandsJSON });
+            const response = (await this.restAPI.put(route, {
+                body: commandsJSON,
+            })) as { id: string; name: string; type: number }[];
+            this.assignCommandIds(response);
             this.logger?.info(
                 `Succesfully registered ${commandsJSON.length} commands`
             );

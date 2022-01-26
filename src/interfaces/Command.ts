@@ -6,6 +6,7 @@ import {
     CommandInteraction,
     ContextMenuInteraction,
     PermissionString,
+    Snowflake,
 } from 'discord.js';
 import Bot from '../client/Bot';
 
@@ -35,4 +36,5 @@ export interface Command<Builder extends CommandBuilderType> {
     permissions:
         | ((interaction: CommandInteractionType<Builder>) => PermissionString[])
         | undefined;
+    id: Snowflake | undefined;
 }
